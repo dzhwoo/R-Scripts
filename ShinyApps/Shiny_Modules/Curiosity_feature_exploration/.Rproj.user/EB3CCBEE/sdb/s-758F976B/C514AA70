@@ -1,0 +1,16 @@
+{
+    "contents" : "shinyUI(pageWithSidebar(\n  \n  headerPanel(\"Dynamic number of plots\"),\n  \n  sidebarPanel(\n    sliderInput(\"n\", \"Number of plots\", value=2, min=1, max=5)\n  ),\n  \n  mainPanel(\n    # This is the dynamic UI for the plots\n    uiOutput(\"plots\")\n  )\n))",
+    "created" : 1435589083162.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2769484705",
+    "id" : "C514AA70",
+    "lastKnownWriteTime" : 1435085653,
+    "path" : "C:/Users/dwoo57/Google Drive/Knowledge Base/R Scripts/ShinyApps/Shiny_Modules/Curiosity_feature_exploration/Multiple_Plots/ui.R",
+    "project_path" : "Multiple_Plots/ui.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

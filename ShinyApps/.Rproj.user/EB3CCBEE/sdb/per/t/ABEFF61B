@@ -1,0 +1,16 @@
+{
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# server is where all the magic happens. UI is calling the functon and gives parameters or inputs as well.\n# You can find out more about building applications with Shiny here:\n# \n# http://www.rstudio.com/shiny/\n#\n\nlibrary(shiny)\n\nshinyServer(function(input, output) {\n   \n  output$distPlot <- renderPlot({\n     \n    # generate and plot an rnorm distribution with the requested\n    # number of observations\n    #dist <- rnorm(input$obs)\n    #hist(dist)\n    data(cars)\n    \n    cars.lo <- loess(dist ~ speed, cars, span =input$obs)\n    #predict(cars.lo, data.frame(speed = seq(5, 30, 1)), se = TRUE)\n    \n    plot(dist ~ speed, data=cars,pch=19,cex=0.1)\n    j <- order(cars$speed)\n    lines(cars$speed[j],cars.lo$fitted[j],col=\"red\",lwd=3)\n    \n  })\n  \n})\n",
+    "created" : 1428686733633.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3589474385",
+    "id" : "ABEFF61B",
+    "lastKnownWriteTime" : 1428686991,
+    "path" : "C:/Users/dwoo57/Google Drive/Knowledge Base/R Scripts/ShinyApps/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

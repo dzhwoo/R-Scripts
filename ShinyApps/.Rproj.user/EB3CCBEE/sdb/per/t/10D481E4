@@ -1,0 +1,16 @@
+{
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n# \n# http://www.rstudio.com/shiny/\n#\n\nlibrary(shiny)\n\nshinyUI(pageWithSidebar(\n  \n  # Application title\n  headerPanel(\"Regression - using Loess Method.\"),\n  \n  \n  # Sidebar with a slider input for number of observations\n  sidebarPanel(\n    sliderInput(\"obs\", \n                \"Span:\", \n                min = 0, \n                max = 1, \n                value = 0.5)\n  ),\n  \n  # Show a plot of the generated distribution\n  mainPanel(\n    h4(\"Why? For me, at least, i think the benefit is that it is non-parametric. \n       For me that means you fit the model to that data not try to fit a square peg into a round top. \n       Some literature states the following Support non-linear regression and also simplicity of linear regression \n       calc ( minimize least square error method. My next questions is then how to predict?.\n       My answer would then be forecast based on forecasted values. Yes this is correct in a way. After the trend\n       is identified, it then does a regression on top of that then adds seasonality to it.\n       https://leve.rs/blog/how-to-correctly-forecast-seasonal-marketing-trends-with-stl/\"),\n    h3(\"How? A sort of piecewise weighted linear/nonlinear regression. \n       Does multi weighted linear regression and combines them\"),\n    h5(\"http://www.itl.nist.gov/div898/handbook/pmd/section1/pmd144.htm\"),\n    h6(\"http://polisci.msu.edu/jacoby/icpsr/regress3/lectures/week4/15.Loess.pdf\"),\n    plotOutput(\"distPlot\")\n  )\n))\n",
+    "created" : 1428686728947.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1423013738",
+    "id" : "10D481E4",
+    "lastKnownWriteTime" : 1428690198,
+    "path" : "C:/Users/dwoo57/Google Drive/Knowledge Base/R Scripts/ShinyApps/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

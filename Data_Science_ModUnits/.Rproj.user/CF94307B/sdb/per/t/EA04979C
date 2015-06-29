@@ -1,0 +1,16 @@
+{
+    "contents" : "# David - represents the task\n# Pepper - represents the actions\n\n# David: Ok Pepper here is some data\ndata<-read.csv(\"C:/Users/dwoo57/Google Drive/Career/Data Mining Competitions/Kaggle/Walmart - Inventory and weather prediction/Experiments/Gamma/Train/Explanatory_Analysis/train_dept92_yoy_sales_unemployment.csv\")\n\n# David: Ok Pepper, what do you see?\nstr(data)\n\n\n\"WISH LIST\na) from date, form years, months, payperiod\"\n\n\nlibrary(plyr)\nmodels <- dlply(data, \"Store_type\", function(data) {\n  lm(Weekly_Sales ~ Unemploy, data = data)} )\n\n\n# this will help us get the p values\nanovas <- llply(models, anova)\n\nmodels\nanovas\n\n# usually look at coefficent to see if significant or not\nfit<-lm(Weekly_Sales ~ Unemploy, data = data)\nsummary(fit)\n\n# how to make this visualy appealing...more fun to work with?\n\nplot(Weekly_Sales ~ Unemploy, data = data)\nplot(fit)\n",
+    "created" : 1435069244386.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3317329622",
+    "id" : "EA04979C",
+    "lastKnownWriteTime" : 1435072483,
+    "path" : "C:/Users/dwoo57/Google Drive/Knowledge Base/R Scripts/Data_Science_ModUnits/OliviaIO_Curiosity_Module_Temporal_Analysis_Test_v5_model_yoy_trend_using_first_wlmrt_Data.R",
+    "project_path" : "OliviaIO_Curiosity_Module_Temporal_Analysis_Test_v5_model_yoy_trend_using_first_wlmrt_Data.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

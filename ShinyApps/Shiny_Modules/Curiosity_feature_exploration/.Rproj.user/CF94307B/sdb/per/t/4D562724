@@ -1,0 +1,17 @@
+{
+    "contents" : "max_plots <- 5\n\nshinyServer(function(input, output) {\n  \n  # Insert the right number of plot output objects into the web page\n  output$plots <- renderUI({\n    plot_output_list <- lapply(1:input$n, function(i) {\n      plotname <- paste(\"plot\", i, sep=\"\")\n      plotOutput(plotname, height = 400, width = 500)\n    })\n    \n    # Convert the list to a tagList - this is necessary for the list of items\n    # to display properly.\n    do.call(tagList, plot_output_list)\n  })\n  \n  data<-read.csv(\"C:/Users/dwoo57/Google Drive/Career/Data Mining Competitions/Kaggle/Walmart - Inventory and weather prediction/Experiments/Gamma/Train/Explanatory_Analysis/train_dept92_yoy_sales_unemployment.csv\")\n  fit<-lm(Weekly_Sales ~ Unemploy, data = data)\n  \n  # Call renderPlot for each one. Plots are only actually generated when they\n  # are visible on the web page.\n  #for (i in 1:2) {\n    # Need local so that each item gets its own number. Without it, the value\n    # of i in the renderPlot() will be the same across all instances, because\n    # of when the expression is evaluated.\n    local({\n      #my_i <- i\n      #plotname <- paste(\"plot\", my_i, sep=\"\")\n      \n      #plot scatter plot and linear regression\n      plotname <- paste(\"plot\", 1, sep=\"\")\n      output[[plotname]] <- renderPlot({\n        plot(Weekly_Sales ~ Unemploy, data = data)\n        abline(fit,col='skyblue')\n      })\n      \n      plotname <- paste(\"plot\", 2, sep=\"\")\n      output[[plotname]] <- renderPlot({\n          par(mfrow = c(2, 2), oma = c(0, 0, 2, 0))\n          plot(fit)\n          #abline(fit,col='skyblue')\n        \n        })\n      })\n      \n      \n    #})\n  #}\n})",
+    "created" : 1435083948858.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1620308803",
+    "id" : "4D562724",
+    "lastKnownWriteTime" : 1435086220,
+    "path" : "C:/Users/dwoo57/Google Drive/Knowledge Base/R Scripts/ShinyApps/Shiny_Modules/Curiosity_feature_exploration/Multiple_Plots/server.R",
+    "project_path" : "Multiple_Plots/server.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
