@@ -1,0 +1,17 @@
+15:14:22,672  INFO Domino:81 - ================================================================================
+15:14:22,675  INFO Domino:81 - starting client
+15:14:22,683 DEBUG Domino:71 - CWD = C:\Users\dwoo57\Google Drive\Knowledge Base\R Scripts\Data_Science_Platforms_Tools\Domino
+15:14:22,685  INFO Domino:81 - executing command: help
+15:14:27,915  INFO Domino:81 - ================================================================================
+15:14:27,918  INFO Domino:81 - starting client
+15:14:27,925 DEBUG Domino:71 - CWD = C:\Users\dwoo57\Google Drive\Knowledge Base\R Scripts\Data_Science_Platforms_Tools\Domino
+15:14:27,926  INFO Domino:81 - executing command: login
+15:14:27,932 DEBUG LoginCommand:71 - logging in to host: https://app.dominodatalab.com
+15:14:27,936  INFO ClientControllerProxy:81 - getting auth info from https://app.dominodatalab.com/loginFromInstaller
+15:14:27,957 DEBUG DefaultTransport:71 - Issuing request to https://app.dominodatalab.com/loginFromInstaller with proxy detected as DIRECT (full request = Request(POST,<function2>,<function1>,List((username,davidzwoo@gmail.com), (password,dominoZhenghao27), (dominoClientSource,R)),List((X-Domino-Api-Key,), (Charset,UTF-8), (Content-Type,application/x-www-form-urlencoded), (content-type,application/x-www-form-urlencoded)),List(<function1>, <function1>, <function1>, <function1>, <function1>),DIRECT,UTF-8,4096))
+15:14:28,768 DEBUG ClientControllerProxy:71 - response from server: {"host":"https://app.dominodatalab.com","user_id":"5591905ae4b00f97421ea0b1","username":"dzhwoo","api_key":"jZNQfIv5y6dRfEP9ynXVFF0ofC4voygFEI1ggFR6Bcu8lEkfoer3O1vvT6DHT2hX","is_cloud_mode":true,"is_cloud_hosted":true}
+15:14:28,970 DEBUG LoginCommand:71 - response from server: InstallConfig(https://app.dominodatalab.com,5591905ae4b00f97421ea0b1,dzhwoo,jZNQfIv5y6dRfEP9ynXVFF0ofC4voygFEI1ggFR6Bcu8lEkfoer3O1vvT6DHT2hX,true,None)
+15:14:34,636  INFO Domino:81 - ================================================================================
+15:14:34,639  INFO Domino:81 - starting client
+15:14:34,646 DEBUG Domino:71 - CWD = C:\Users\dwoo57\Google Drive\Knowledge Base\R Scripts\Data_Science_Platforms_Tools\Domino
+15:14:34,648  INFO Domino:81 - executing command: upload

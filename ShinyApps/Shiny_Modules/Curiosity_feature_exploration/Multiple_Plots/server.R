@@ -1,4 +1,5 @@
 max_plots <- 5
+library(ggplot2)
 
 shinyServer(function(input, output) {
   
@@ -17,20 +18,24 @@ shinyServer(function(input, output) {
   data<-read.csv("C:/Users/dwoo57/Google Drive/Career/Data Mining Competitions/Kaggle/Walmart - Inventory and weather prediction/Experiments/Gamma/Train/Explanatory_Analysis/train_dept92_yoy_sales_unemployment.csv")
   fit<-lm(Weekly_Sales ~ Unemploy, data = data)
   
-  # Call renderPlot for each one. Plots are only actually generated when they
-  # are visible on the web page.
-  #for (i in 1:2) {
-    # Need local so that each item gets its own number. Without it, the value
-    # of i in the renderPlot() will be the same across all instances, because
-    # of when the expression is evaluated.
     local({
-      #my_i <- i
-      #plotname <- paste("plot", my_i, sep="")
-      
+
       #plot scatter plot and linear regression
+      #for the scatter plot want to plot by groups
       plotname <- paste("plot", 1, sep="")
       output[[plotname]] <- renderPlot({
         plot(Weekly_Sales ~ Unemploy, data = data)
+        
+        # this does the scatter plot by color
+        # next how to make the font bigger, for now using size
+        qplot(Unemploy,Weekly_Sales,data = data, color = Store_type ,size=20)
+        
+        # next frequency count by store stype
+        # So A and B are majority
+        # also wondering if it make sense to look at the negative unemployment rate. mostly positive.
+        # actually what does the unem
+        # should we do a box plot?
+        
         abline(fit,col='skyblue')
       })
       
@@ -42,8 +47,4 @@ shinyServer(function(input, output) {
         
         })
       })
-      
-      
-    #})
-  #}
 })

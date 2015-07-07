@@ -1,0 +1,17 @@
+{
+    "contents" : "#install.packages(\"domino\")\nlibrary(domino)\ndomino.login(\"davidzwoo@gmail.com\", \"dominoZhenghao27\")\n\n## Set Working Directory to the 'quick-start' folder\nsetwd(\"C:/quick-start\") \n\n## Upload new files to the 'quick-start' folder on Domino cloud\ndomino.upload()\n\ndomino.sync()\n",
+    "created" : 1435604720501.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "58603631",
+    "id" : "BF54CD1B",
+    "lastKnownWriteTime" : 1435605824,
+    "path" : "C:/quick-start/setup.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
