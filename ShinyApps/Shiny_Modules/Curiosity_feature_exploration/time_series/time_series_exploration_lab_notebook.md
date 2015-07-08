@@ -8,7 +8,15 @@ When you click the **Knit HTML** button a web page will be generated that includ
 **Objective**:
 
 Framework:
-input -> model -> output
+
+A) eq: input -> model -> output
+
+B) Reduce it to the lowest common unit
+
+C) Ask why? Why is this important?
+
+D) Generalization is a key concept. Random sampling....fewer + broad rules vs many + niche rules
+
 1. Context.Domain: Walmart sales. (Retail, lower income group, Arkansas hq, weekly sales revenue)
 
 1. Work backwards. What is the output?
@@ -30,34 +38,13 @@ input -> model -> output
 3f.  Trends: Grow customer base ( more shops, more customer base - from unemployed, other retailers). Grow engagement ( more spend from current customers - promos) 
 
 
+**Exploration/Hypothesis Generation**:
 
+1. Hypothesis: Seasonality + Trend = Sales
 
+a) Seasonality is similar year on year as seen on the charts
 
-Prediction:
-
-1.Dependent variable : Weekly Sales (Assuming in dollars)>>> Continuous (vs Categorical) >> Regression
-
-2 How far in the future: Given 2.5 years predict 9 months from 2012 Nov to 2013 July
-
-3. Overall goal: 9 months into the future. This seems like a long time.
-
-4. Given 2.5 years of data....what is the smallest unit that we can predict here...say given what we have could we predict the last month? If we can then that would give us some confidence of the next month.
-
-5. Reduce it to the lowest common unit
-
-3.Equation: Prior priors -> 1 to 9 Months ahead
-
-4.Granularity: Across diff stores, across diff dept at the weekly level
-
-Training/Testing:
-1. Training - we are given 2.5 years of history. Starting with 2010 - 2012. 2012 is when the markdowns were impl.
-2. This means baseline of 2010-2011 = baseline and then 2012 = markdowns effect
-3. Holidays are given more points
-4. Training can we partition 2012 into two parts or 4 holidays we split 2 - 2. Can we generalize across holidays are do we have to see the effect for each to extrapolate to the following year? Possibly each markdown would have a diff impact on holiday.
-5. Maybe what we can do is markdown impact on non-holiday vs holiday
-6. Typically recency is a good indicator
-7. trick is the following:
-7a: 2011 predicts 2011
+b) Trend: 2011 ( 2nd half) -> 2010 + x , 2012 ( first half) -> 2010 + X. Is trend inc/dec/stop? What drives trend?
 
 
 
@@ -219,21 +206,7 @@ ddply(sample2, .(Year),summarise,Weekly_Sales = sum(Weekly_Sales))
 ## 3 2012    151629441
 ```
 
- From this figure, say we were to build a model for each year
- 2010 = seasonality
- 2011 = 2010_seasonality + 2011_Trend
- 2012 = 2010_seasonality + 2011_Trend + 2012_Trend + Markdowns
- 2013 = 2010_seasonality + 2011_Trend + 2012_Trend + 2013_Trend + Markdowns
 
-From 2010 and 2011 we can possibly determine the seasonality and trend
-We possibly can assume seasonality reminds the same
-Do we assume the trend would repeat year on year? Thought earlier was whether there were explanatory variables that would explain the trend
-Then once we know this we can then determine the impact of the markdowns
-
- sounds like a reasonable place to start
- train data is all
- test data is the submission data
- eventually want to have cross-validation set. Maybe partition 2012. Take some weeks out and see what happens, especially non holiday weeks 
 
 ```r
 ggplot(sample.new, aes(Weeknum,Weekly_Sales)) + 
@@ -242,6 +215,7 @@ ggplot(sample.new, aes(Weeknum,Weekly_Sales)) +
 ```
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
 
 Transformation:
 
@@ -259,171 +233,97 @@ ggplot(sample2.new, aes(Weeknum_mod,Weekly_Sales)) +
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
-strategy
-1.determine seasonality component
-2.Trend component. 
-3.Goal for train set is to predict 2012 and then the submission file is the test set.
-
-How does STL predict the trend?
-Probably what i would do is
- use 2010 to predict 2011 once i have this stable then predict 2012. then use this has a baseline
- if i use 2010 to predict 2011. Would i over predict?
- 
 
 
+Thoughts:
 
-```r
-library(forecast)
-```
+1. In 2011, determine when the split ocurred - what are the external drivers? What causes this
+2. Do we apply the same trend in 2012 for the first half?
+3. Can we generalize across stores? High level grouping?
 
-```
-## Loading required package: zoo
-## 
-## Attaching package: 'zoo'
-## 
-## The following objects are masked from 'package:base':
-## 
-##     as.Date, as.Date.numeric
-## 
-## Loading required package: timeDate
-## This is forecast 5.9
-```
+Next steps:
+Q: Since trends are all increasing, what are explanatory variables that can explain it? i.e unemployment rate?
 
-```r
-sample.new.subset<-subset(sample.new, Date >= "2010-01-01" & Date <= "2012-02-28")
-train_ts<- ts(sample.new.subset$Weekly_Sales, frequency=52, start = c(2010, 2,5))
-fit1 <- stl(train_ts,  s.window="periodic", t.window = 52)
-plot(fit1)
-```
+1. For store type A, take a random sample and plot difference year on year
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+a) Steps calculate year on year difference for the same store (done)
+b) now take random sample of stores
 
-```r
-summary(fit1)
-```
+str(sample2)
 
-```
-##  Call:
-##  stl(x = train_ts, s.window = "periodic", t.window = 52)
-## 
-##  Time.series components:
-##     seasonal             trend           remainder         
-##  Min.   :-603190.0   Min.   :3229339   Min.   :-179372.71  
-##  1st Qu.:-166923.1   1st Qu.:3260171   1st Qu.: -32044.21  
-##  Median : -65736.5   Median :3303609   Median :  -2951.49  
-##  Mean   :   4954.4   Mean   :3346866   Mean   :  -3568.91  
-##  3rd Qu.: 190421.8   3rd Qu.:3431744   3rd Qu.:  26496.53  
-##  Max.   :1057021.8   Max.   :3579803   Max.   : 141250.86  
-##  IQR:
-##      STL.seasonal STL.trend STL.remainder data  
-##      357345       171573     58541        378712
-##    %  94.4         45.3      15.5         100.0 
-## 
-##  Weights: all == 1
-## 
-##  Other components: List of 5
-##  $ win  : Named num [1:3] 1081 52 53
-##  $ deg  : Named int [1:3] 0 1 1
-##  $ jump : Named num [1:3] 109 6 6
-##  $ inner: int 2
-##  $ outer: int 0
-```
+#First get a single store
+sample2.store39<-subset(sample2, Store == 39)
+str(sample2.store39)
 
-```r
-accuracy(forecast(fit1))
-```
+#next how does the data look like
+head(sample2.store39)
+# need to match where year = year + 1 and weeknum = weeknum
+install.packages("dplyr")
+library(dplyr)
 
-```
-##                    ME     RMSE      MAE       MPE     MAPE      MASE
-## Training set 6600.977 59193.98 44644.48 0.1669985 1.344385 0.2263082
-##                    ACF1
-## Training set -0.1606161
-```
+sample.tbl<-tbl_df(sample2.store39)
 
-MAPE of 1.3% that seems low. Could potentially be overfitting.
-Some take aways:
-Looking at 2011. Also for accuracy what sample does it use? Uses in sample so all.
-If look at the trend see that this is almost a linear curve, does this make sense? Why would consumption increase linearly over time?
-How about remainder? Some assumptions, error should be random, meaning no correlation between points.
-Maybe can include some diagnostic plots here.
-Seems random
-Not increasing over time
+head(sample.tbl)
+str(sample.tbl)
+summary(sample.tbl)
 
-Maybe seasonality is really multiplicative, seems odd the trend would increase linearly over time. Should be step wise
-When to use additive vs multiplicative. Mainly does the seasonal component vary with time or volume? 
-I think mainly of seasonal component is constant or does it vary with the 'volume' or varies with the actual trend.
-Is it a trend * seasonality or trend + seasonality. if varies with the trend that is multiplicative
-Maybe a framework is thinking of it in mathematical formulas there are only a few permulations
-x +-*/ y then (y * y ...) + z Only these variations
-
-So now, we have framework for decomposing into seasonality + trend
-We have a notebook that would help us rehash and formulate the analysis
-Next, we are looking into the predictability or how generalizable is this model.
-
-Generalizability:
-Seasonality i think make sense
-Just the trend is odd. Why would it increase linearly over time.
-Unless population grows that rapidly?
-
-Can we check unemployment rate?
-
-**Transformations that helped**:
-1. Offseting the time series helps - aligning the weeks
+sample.tbl %>
+require(plyr)
+library(quantmod)
 
 
-```r
-library(forecast)
-sample.new.subset<-subset(sample.new, Date >= "2010-01-01" & Date <= "2012-02-28")
-train_ts<- ts(sample.new.subset$Weekly_Sales, frequency=52, start = c(2010, 2,5))
-fit1 <- stl(train_ts,  s.window="periodic", t.window = 52)
-plot(fit1)
-```
+subset.store39<-subset(sample2.store39, select =c('Date', 'Weekly_Sales','Weeknum_mod','Year'))
+str(subset.store39)
+ds_test$Store
+#diff uses the consective arguments
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
+#ddply(subset.store39, .(Weeknum_mod) , mutate, yoy = c(NA,diff(Weekly_Sales)/Weekly_Sales ))
 
-```r
-summary(fit1)
-```
+ds<-ddply(subset.store39, .(Weeknum_mod) , transform, yoy_per = Delt(Weekly_Sales), yoy = c(NA,diff(Weekly_Sales)) )
 
-```
-##  Call:
-##  stl(x = train_ts, s.window = "periodic", t.window = 52)
-## 
-##  Time.series components:
-##     seasonal             trend           remainder         
-##  Min.   :-603190.0   Min.   :3229339   Min.   :-179372.71  
-##  1st Qu.:-166923.1   1st Qu.:3260171   1st Qu.: -32044.21  
-##  Median : -65736.5   Median :3303609   Median :  -2951.49  
-##  Mean   :   4954.4   Mean   :3346866   Mean   :  -3568.91  
-##  3rd Qu.: 190421.8   3rd Qu.:3431744   3rd Qu.:  26496.53  
-##  Max.   :1057021.8   Max.   :3579803   Max.   : 141250.86  
-##  IQR:
-##      STL.seasonal STL.trend STL.remainder data  
-##      357345       171573     58541        378712
-##    %  94.4         45.3      15.5         100.0 
-## 
-##  Weights: all == 1
-## 
-##  Other components: List of 5
-##  $ win  : Named num [1:3] 1081 52 53
-##  $ deg  : Named int [1:3] 0 1 1
-##  $ jump : Named num [1:3] 109 6 6
-##  $ inner: int 2
-##  $ outer: int 0
-```
+ds<-subset(ds, Year ==2011)
 
-```r
-accuracy(forecast(fit1))
-```
-
-```
-##                    ME     RMSE      MAE       MPE     MAPE      MASE
-## Training set 6600.977 59193.98 44644.48 0.1669985 1.344385 0.2263082
-##                    ACF1
-## Training set -0.1606161
-```
+plot(ds$Weeknum_mod,ds$Delt.1.arithmetic, type ='l')
 
 
-Potential resources:
-Computing baseline sales
-http://www.tabsgroup.com/wp-content/uploads/2012/12/modeltoimprovetheestimationofbaselineretailsales.pdf
+b) Second part random sample
+
+set.seed(1234)
+take <- sample(unique(sample2$Store), 10)
+
+NROW(unique(sample2$Store))
+ncol(unique(sample2$Store))
+
+take
+
+ds_test<-sample2[sample2$Store %in% take, ]
+
+summary(ds_test)
+ds_test$Store<-as.factor(ds_test$Store)
+NROW(unique(ds_test$Store))
+
+c) now calculate diff 
+
+ds<-ddply(ds_test, .(Store,Weeknum_mod) , transform, yoy_per = Delt(Weekly_Sales), yoy = c(NA,diff(Weekly_Sales)) )
+ds<-subset(ds, Year ==2011)
+
+str(ds)
+
+#initial plot
+#what is out goal here...take a sample to see what is going on.
+#what are the questions we are interested? If they are all similar then should be similar to the average?
+#do we then just say that type A has this trend?
+#oh we wanted to understand what the drivers where, how they correlate to explanatory variables?
+
+library(ggplot2)
+ggplot(ds, aes(Weeknum_mod,Delt.1.arithmetic)) + 
+  geom_line( aes(colour = factor(Store) ),size = 1)  + 
+  geom_point(size = 2)
+
+#These are the next steps
+#very hard to see
+#unless we smooth it out to see what is going on
+#what is the monthly average
+
+
+
