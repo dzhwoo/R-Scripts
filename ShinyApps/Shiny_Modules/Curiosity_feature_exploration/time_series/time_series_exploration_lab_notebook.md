@@ -137,7 +137,21 @@ Based on the below
 
 ```r
 library(plyr)
+```
+
+```
+## Warning: package 'plyr' was built under R version 3.0.3
+```
+
+```r
 library(lattice)  #xyplot
+```
+
+```
+## Warning: package 'lattice' was built under R version 3.0.3
+```
+
+```r
 library(latticeExtra)  #layer_, panel.xblocks
 ```
 
@@ -155,8 +169,21 @@ library(gridExtra)  #grid.arrange
 
 ```r
 library(RColorBrewer)  #brewer.pal
-library(ggplot2)
+```
 
+```
+## Error in library(RColorBrewer): there is no package called 'RColorBrewer'
+```
+
+```r
+library(ggplot2)
+```
+
+```
+## Error in library(ggplot2): there is no package called 'ggplot2'
+```
+
+```r
 sample.new<-ddply(sample, .(Date,Weeknum,Year,IsHoliday),summarise,Weekly_Sales = sum(Weekly_Sales))
 str(sample.new)
 ```
@@ -214,7 +241,9 @@ ggplot(sample.new, aes(Weeknum,Weekly_Sales)) +
   geom_point( aes(color = factor(IsHoliday)),size = 3.5)
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+```
+## Error in eval(expr, envir, enclos): could not find function "ggplot"
+```
 
 
 Transformation:
@@ -232,8 +261,148 @@ ggplot(sample2.new, aes(Weeknum_mod,Weekly_Sales)) +
   geom_point( aes(color = factor(IsHoliday)),size = 3.5)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
+```
+## Error in eval(expr, envir, enclos): could not find function "ggplot"
+```
+**Why this matters? This shows seasonality is similar year on year and trends are driving the delta yoy**
 
+
+**(NEXT) H1B: Trend -> Are yoy trend decreasing/increasing/constant/stop? What are drivers of trend?**
+
+2010 Seasonality + 2011 trend + 2011 values -> 2012
+2010 Seasonality can compute
+2011 trend is this increasing or decreasing?
+
+How to measure trend?
+Assume seasonality is constant year on year and is additive.
+
+Take year on year delta:
+2010 to 2011
+2011 to 2012
+
+What do we need?
+Aggregate by year
+calculate the average weekly sales, maybe take the median
+then take the year on year difference
+
+
+```r
+library(dplyr)
+```
+
+```
+## Error in library(dplyr): there is no package called 'dplyr'
+```
+
+```r
+library(zoo)
+```
+
+```
+## Warning: package 'zoo' was built under R version 3.0.3
+```
+
+```
+## 
+## Attaching package: 'zoo'
+## 
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+```
+
+```r
+ds<- sample2 %>% group_by(Year,Weeknum_mod) %>% summarize(avg = mean(Weekly_Sales))
+```
+
+```
+## Error in eval(expr, envir, enclos): could not find function "%>%"
+```
+
+```r
+#then 
+ds1<-group_by(ds,Weeknum_mod)
+```
+
+```
+## Error in eval(expr, envir, enclos): could not find function "group_by"
+```
+
+```r
+#this works because of the group by. It's smart to know how to do the difference
+ds2<-mutate(ds1,diff_yoy = avg - lag(avg), per_diff_yoy = avg/lag(avg)-1)
+```
+
+```
+## Error in is.data.frame(.data): object 'ds1' not found
+```
+
+```r
+ds3<-group_by(ds2,Year)
+```
+
+```
+## Error in eval(expr, envir, enclos): could not find function "group_by"
+```
+
+```r
+ds3<-mutate(ds3,mov_avg = rollapply(data = per_diff_yoy, width = 4, FUN = mean, align ="right",fill = NA ))
+```
+
+```
+## Error in is.data.frame(.data): object 'ds3' not found
+```
+
+```r
+ggplot(ds3, aes(Weeknum_mod)) + 
+geom_line(aes(y=per_diff_yoy,color=factor(Year)),size = 0.5)  +
+geom_line(aes(y=mov_avg,color=factor(Year)),size = 1)  
+```
+
+```
+## Error in eval(expr, envir, enclos): could not find function "ggplot"
+```
+**Why this matters? Observation. A) Cross-over point b) Levelling or decreasing. The cross over seems to lead that the trend may be decreasing or normalizing**
+
+#Next steps
+a) Why that cross over point?
+b) Also can we correlate any other features with this? Since we are not sure what is driving it
+c) Can we find the drivers that cause the trends?
+d) Correlate it with other features
+e) Maybe take 2011 and then especially when that cross over point happen or start to increase, any other variables that correlate with it
+
+
+library(dplyr)
+library(zoo)
+
+str(sample2)
+
+ds<- sample2 %>% group_by(Year,Weeknum_mod) %>% summarize(per_diff = mean(Weekly_Sales))
+
+#going to do this in steps
+# first find the average by year per week across stores
+ds<- sample2 %>% group_by(Year,Weeknum_mod) %>% summarize(avg = mean(Weekly_Sales))
+#then 
+ds1<-group_by(ds,Weeknum_mod)
+#this works because of the group by. It's smart to know how to do the difference
+ds2<-mutate(ds1,diff_yoy = avg - lag(avg), per_diff_yoy = avg/lag(avg)-1)
+#now add moving average, pick 4 so can see the monthly average
+ds3<-group_by(ds2,Year)
+ds3<-mutate(ds3,mov_avg = rollapply(data = per_diff_yoy, width = 4, FUN = mean, align ="right",fill = NA ))
+
+ds3
+ds2
+
+
+
+
+
+
+ds2
+ds1
+ds
+
+Do we need to know what is causing X? Or more so is Trend up/down/same/zero? I think the second questions is more important
 
 Thoughts:
 

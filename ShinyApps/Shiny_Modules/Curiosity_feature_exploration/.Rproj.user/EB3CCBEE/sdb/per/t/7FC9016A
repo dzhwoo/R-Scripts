@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1436389348313.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7FC9016A",
+    "lastKnownWriteTime" : 308410160,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "ds3",
+        "contentUrl" : "content?title=ds3&file=414d4959148443508b8ce677b798e0a4.htm",
+        "displayedObservations" : 143,
+        "displayedVariables" : 6,
+        "totalObservations" : 143,
+        "variables" : 6
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}
